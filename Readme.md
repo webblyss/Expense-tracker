@@ -23,6 +23,10 @@ Expense Tracker is a web application that helps you track your expenses and mana
 
 `https://github.com/webblyss/Expense-tracker.git`
 
+![Screenshot from 2023-05-27 16-19-45](https://github.com/webblyss/Expense-tracker/assets/60282806/56539825-bfea-4d22-b515-c56549513b15)
+![Screenshot from 2023-05-27 18-22-13](https://github.com/webblyss/Expense-tracker/assets/60282806/f1854d19-b2bc-475a-9721-067dd712be39)
+
+![Screenshot from 2023-05-27 18-23-12](https://github.com/webblyss/Expense-tracker/assets/60282806/3de80522-9ab1-41ec-8a7c-eb8fb06302f2)
 
 
 
