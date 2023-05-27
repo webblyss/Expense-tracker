@@ -1,0 +1,138 @@
+{% include 'base.html' %} 
+{% load static %} 
+{% include 'nav.html' %} 
+{% block content %}
+
+<div class="container">
+  <div class="add-expense-form">
+    <h4>Add Expense</h4>
+    <form method="POST">
+      {% csrf_token %}
+      <div class="form-row">
+        <div class="col-md-4 mb-3">
+          <input
+            required
+            name="expense-name"
+            type="text"
+            class="form-control"
+            placeholder="Expense Name"
+          />
+        </div>
+        <div class="col-md-4 mb-3">
+          <input
+            required
+            name="amount"
+            type="number"
+            class="form-control"
+            placeholder="Amount"
+          />
+        </div>
+        <div class="col-md-4 mb-3">
+          <button type="submit" class="btn btn-primary btn-block">Add</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <div class="expense-list">
+    <h4>Expense List</h4>
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th scope="col">Expense Name</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Edit</th>
+          <th scope="col">Delete</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for data in expenses %}
+
+        <tr>
+          <form>
+            <td>{{data.expense_name}}</td>
+            <td>${{data.amount}}</td>
+            <td><button class="btn btn-success">Edit</button></td>
+            <td>
+              <button id="button-delete" class="btn btn-danger">Delete</button>
+            </td>
+            <input
+              type="hidden"
+              name="id"
+              class="form-control"
+              id="cart-id"
+              value="{{ data.id }}"
+            />
+          </form>
+        </tr>
+
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <p class="total-expense">Total Expense: $ {{total_price}}</p>
+  </div>
+</div>
+
+{% endblock %}
+
+<style>
+  body {
+    padding: 20px;
+  }
+
+  .expense-list {
+    margin-top: 30px;
+  }
+
+  .total-expense {
+    font-size: 24px;
+    margin-top: 10px;
+  }
+
+  .add-expense-form {
+    margin-top: 30px;
+  }
+</style>
+
+<script>
+  const button_del = document.querySelectorAll("#button-delete");
+
+  button_del.forEach((btn) => {
+    btn.addEventListener("click", function (event) {
+      event.preventDefault();
+      const el = event.target.parentElement.parentElement;
+      const id = el.children[5].value;
+      console.log(id);
+      var csrftoken = getCookie("csrftoken");
+      $.ajax({
+        url: "delete_exprense/" + id + "/",
+        method: "POST",
+        headers: {
+          "X-CSRFToken": csrftoken,
+        },
+        data: {
+          exprense_id: id,
+        },
+      }).then((response)=>{
+        window.location.reload();
+      });
+    });
+  });
+
+  //GET CRSF TOKEN
+  function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie !== "") {
+      var cookies = document.cookie.split(";");
+      for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i].trim();
+        if (cookie.substring(0, name.length + 1) === name + "=") {
+          cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+          break;
+        }
+      }
+    }
+    return cookieValue;
+  }
+</script>

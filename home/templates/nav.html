@@ -1,0 +1,58 @@
+{% load static %}
+
+<nav class="navbar navbar-expand-md bg-body-tertiary shadow sticky-top">
+    <div class="container">
+        <a class="navbar-brand d-flex" href="/">
+            <h4>Expense</h4>
+            <span class="text-danger mx-2 fw-bold" >tracker</span>
+        </a>
+        <button class="navbar-toggler" style="width: 70px;" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown"
+            aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNavDropdown">
+            <div class="mx-auto"></div>
+            <ul class="navbar-nav">
+      {% if user.is_authenticated %}
+      
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          {{user.username}}
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="{% url 'accounts:logout' %}">Logout</a>
+        </div>
+      </li>
+      {% else %}
+      <li class="nav-item dropdown">
+        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          Accounts
+        </a>
+        <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+          <a class="dropdown-item" href="{% url 'accounts:login_user' %}">Login</a>
+          <a class="dropdown-item" href="{% url 'accounts:register' %}">Register</a>
+        </div>
+      </li>
+      
+      {% endif %}
+    
+    </ul>
+        </div>
+
+
+    </div>
+</nav>
+
+
+<style>
+    .btn-outline-info:hover{
+        background-color: #279681;
+        border-color: #279681;
+        color: #fff;
+        
+    }
+    .dropdown-toggle::after {
+  display: none;
+}
+
+</style>
