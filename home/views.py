@@ -42,14 +42,28 @@ def home(request):
 
 
 
-def delete_exprense(request,exprense_id):
+def delete_expense(request,exprense_id):
     expense = get_object_or_404(Expense, id=exprense_id)
     expense.delete()
     print('exprense deleted successfully')
     return redirect(request.META.get('HTTP_REFERER'))
     
     
+def update_expense(request, expense_id):
+    expense = get_object_or_404(Expense,id=expense_id)
+    if request.method == 'POST':
+        expense.expense_name = request.POST['expense-title']
+        expense.amount = request.POST['expense-amount']
+        expense.user = request.user
+        expense.save()
+        return redirect(request.META.get('HTTP_REFERER'))
+        
+        
     
+    
+    
+    
+
     
     
     

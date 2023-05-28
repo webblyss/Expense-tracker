@@ -52,7 +52,7 @@
           <form>
             <td>{{data.expense_name}}</td>
             <td>${{data.amount}}</td>
-            <td><button class="btn btn-success">Edit</button></td>
+            <td><button type="button" id="edit-button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#exampleModal">Edit</button></td>
             <td>
               <button id="button-delete" class="btn btn-danger">Delete</button>
             </td>
@@ -74,6 +74,55 @@
   </div>
 </div>
 
+
+
+<!-- MODELS HERE -->
+<div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h1 class="modal-title fs-5" id="exampleModalLabel">Edit Expense</h1>
+      </div>
+      <div class="modal-body">
+        <form>
+          <div class="form-row">
+            <div class="col-md-12 mb-3">
+              <input
+                required
+                name="expense-title"
+                type="text"
+                class="form-control"
+                placeholder="Expense Name"
+                id="update-exprense-field"
+              />
+            </div>
+            <div class="col-md-12 mb-3">
+              <input
+                required
+                name="expense-amount"
+                type="number"
+                class="form-control"
+                placeholder="Amount"
+                id="update-expense-price"
+              />
+            </div>
+             <input
+              type="hidden"
+              name="id"
+              class="form-control"
+              id="update-id-field"
+              value=""
+
+            />
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" id="save-expense" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
 
 <style>
@@ -97,6 +146,11 @@
 
 <script>
   const button_del = document.querySelectorAll("#button-delete");
+  const edit_button = document.querySelectorAll('#edit-button')
+  const update_exprense_field = document.getElementById('update-exprense-field');
+  const update_expense_price_field = document.getElementById('update-expense-price');
+  const update_expense_id = document.getElementById('update-id-field');
+  const updateButton = document.getElementById('save-expense')
 
   button_del.forEach((btn) => {
     btn.addEventListener("click", function (event) {
@@ -113,12 +167,64 @@
         },
         data: {
           exprense_id: id,
+          "expense_name":update_exprense_field,
+          "amount":update_expense_price_field,
         },
       }).then((response)=>{
         window.location.reload();
       });
     });
   });
+
+
+  //  EDIT EXPRENSE FUNCTION
+  edit_button.forEach((btn)=>{
+    btn.addEventListener('click',function(event){
+      event.preventDefault();
+      const el = event.target.parentElement.parentElement;
+      const id = el.children[5].value;
+      const exprense_text = el.children[1].innerText;
+      const exprense_price = el.children[2].innerText.toString();
+      const sliceText = exprense_price.replace('$', '');
+      update_exprense_field.value = exprense_text;
+      update_expense_price_field.value = sliceText;
+      update_expense_id.value = id;
+    })
+  })
+
+
+
+// UPDATE EXPENSE FUNCTION
+updateButton.addEventListener('click',function(event){
+  var csrftoken = getCookie("csrftoken");
+  $.ajax({
+    url:"update_expense/" + update_expense_id.value + "/",
+    method:"POST",
+    headers: {
+      "X-CSRFToken": csrftoken,
+    },
+    data:{
+      "expense-title": update_exprense_field.value,
+      "expense-amount":update_expense_price_field.value,
+    }
+  }).then((response)=>{
+    console.log('item updated');
+    window.location.reload()
+  })
+})
+
+
+
+
+
+
+
+
+
+
+
+
+
 
   //GET CRSF TOKEN
   function getCookie(name) {
